@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://192.168.0.144:3307/db_odd_adv_1
+    username: odd_adv_1
+    password: trigger502
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: mappers/**/*.xml
