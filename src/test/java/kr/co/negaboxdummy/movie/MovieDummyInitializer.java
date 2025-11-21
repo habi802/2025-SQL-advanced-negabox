@@ -1,5 +1,7 @@
 package kr.co.negaboxdummy.movie;
 
-public class MovieDummyInitializer {
+import kr.co.negaboxdummy.config.FakerConfig;
+
+public class MovieDummyInitializer extends FakerConfig {
 
 }
