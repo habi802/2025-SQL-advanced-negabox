@@ -16,5 +16,5 @@ public class FakerConfig {
     @Autowired
     protected SqlSessionFactory sqlSessionFactory;
 
-    Faker faker = new Faker(new Locale("ko"));
+    protected Faker faker = new Faker(new Locale("ko"));
 }
