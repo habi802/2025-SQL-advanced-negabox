@@ -8,3 +8,7 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
   mapper-locations: classpath:/mapper/**/*.xml
+
+constants: # 영화진흥위원회 오픈 API
+  kobis-movie:
+    key: fa1e86449e57e4881a0095e3e3ea15f8
