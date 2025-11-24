@@ -36,7 +36,7 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation 'net.datafaker:datafaker:2.5.3'
     implementation 'org.springframework.security:spring-security-crypto'
-
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.3.0'
 }
 
 tasks.named('test') {
