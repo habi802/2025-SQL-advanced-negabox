@@ -88,7 +88,7 @@ public class UserDummyInsertTest extends FakerConfig {
     }
 
     private String randomCarrier() {
-        String[] list = {"00901", "00902", "00903"};
+        String[] list = {"00901", "00902", "00903", "00904", "00905"};
         return list[faker.number().numberBetween(0, list.length)];
     }
 
