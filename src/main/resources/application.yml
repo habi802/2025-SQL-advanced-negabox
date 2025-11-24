@@ -9,6 +9,8 @@ mybatis:
     map-underscore-to-camel-case: true
   mapper-locations: classpath:/mapper/**/*.xml
 
-constants: # 영화진흥위원회 오픈 API
+constants: # 영화진흥위원회 오픈 API, 일 3000회 제한이 있으니 주의바람!
   kobis-movie:
-    key: fa1e86449e57e4881a0095e3e3ea15f8
+    #key: fa1e86449e57e4881a0095e3e3ea15f8
+    #key: c402beaf7f2c682d2071a5ba072b1d6d
+    key: 8401ee478dd204495a978e23c5fc55f4
