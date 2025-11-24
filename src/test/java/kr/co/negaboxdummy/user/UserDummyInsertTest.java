@@ -1,10 +1,11 @@
 package kr.co.negaboxdummy.user;
 
 import kr.co.negaboxdummy.config.FakerConfig;
+import kr.co.negaboxdummy.user.model.NonUserJoinReq;
 import kr.co.negaboxdummy.user.model.UserJoinReq;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,8 +14,6 @@ public class UserDummyInsertTest extends FakerConfig {
 
     @Autowired
     private UserMapper userMapper;
-
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     private String randomUserId() {
         // 1) 영문 길이 랜덤 (3~8자)
@@ -33,11 +32,11 @@ public class UserDummyInsertTest extends FakerConfig {
         return letters + numbers;
     }
 
-
+    @Transactional
     @Test
     void insertDummyUsers() {
-
-        for (int i = 0; i < 342895; i++) {
+        int LENGTH = 163975;
+        for (int i = 0; i < LENGTH; i++) {
             UserJoinReq req = makeUser();
             userMapper.userJoin(req);
         }
@@ -66,17 +65,17 @@ public class UserDummyInsertTest extends FakerConfig {
         String email = userIdStr + faker.internet().emailAddress();
 
         // 이름의 공백 제거 (성/이름 붙이기)
-        String name = faker.name().fullName().replace("\\s+", "");
+        String name = faker.name().fullName().replaceAll("\\s+", "");
 
-        // Faker 비밀번호 + BCrypt 암호화
-        String rawPassword = faker.internet().password(8, 16, true, true, true);
-        String encodedPassword = passwordEncoder.encode(rawPassword);
+        // Faker 비밀번호 + BCrypt 암호화했다고 가정
+        String rawPassword = "$2a$12$m7qvhiSgQeqtxq.FiT.Wbe0BuMKfWgoLzemM82RIP2KaOE7fFzZSS";
+//        String encodedPassword = passwordEncoder.encode(rawPassword);
 
         return UserJoinReq.builder()
                 .membershipId(faker.number().numberBetween(1, 4))
                 .name(name)
                 .email(email)
-                .password(encodedPassword)
+                .password(rawPassword)
                 .birth(birth)
                 .carrierCode(randomCarrier())
                 .phone(randomPhone())
@@ -102,5 +101,51 @@ public class UserDummyInsertTest extends FakerConfig {
                 faker.number().digits(4) + "-" +
                 faker.number().digits(4) + "-" +
                 faker.number().digits(4);
+    }
+
+    @Transactional
+    @Test
+    void insertDummyNonUsers() {
+        int LENGTH = 1869;
+        for (int i = 0; i < LENGTH; i++) {
+            NonUserJoinReq req = makeNonUser();
+            userMapper.nonUserJoin(req);
+        }
+    }
+
+    private NonUserJoinReq makeNonUser() {
+
+        String name = faker.name().fullName().replaceAll("\\s+", "");
+
+        String rawPassword = "$2a$12$m7qvhiSgQeqtxq.FiT.Wbe0BuMKfWgoLzemM82RIP2KaOE7fFzZSS";
+
+        LocalDateTime createdAt = LocalDateTime.now()
+                .plusDays(faker.number().numberBetween(0, 7))
+                .plusHours(faker.number().numberBetween(0, 23))
+                .plusMinutes(faker.number().numberBetween(0, 59));
+
+        LocalDateTime updatedAt = createdAt.plusDays(7);
+
+        return NonUserJoinReq.builder()
+                .name(name)
+                .phone(randomPhone())
+                .birth(randomBrith())
+                .password(rawPassword)
+                .createdAt(createdAt)
+                .expireAt(updatedAt)
+                .build();
+    }
+
+    private String randomBrith() {
+        int year = faker.number().numberBetween(1970, 2011);
+        int month = faker.number().numberBetween(1, 12);
+        int day = faker.number().numberBetween(1, 28);
+
+        // YYMMDD 포맷
+        String yy = String.format("%02d", year % 100);
+        String mm = String.format("%02d", month);
+        String dd = String.format("%02d", day);
+
+        return yy + mm + dd;
     }
 }

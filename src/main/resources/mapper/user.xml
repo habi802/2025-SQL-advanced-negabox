@@ -10,34 +10,35 @@
             keyProperty="userId">
 
         INSERT INTO user
-        (
-        membership_id,
-        name,
-        email,
-        password,
-        birth,
-        carrier_code,
-        phone,
-        point,
-        created_at,
-        updated_at,
-        card_num,
-        grade_updated_at
-        )
+        (membership_id, name, email, password, birth, carrier_code, phone,
+        point, created_at, updated_at, card_num, grade_updated_at)
         VALUES
-        (
-        #{membershipId},
-        #{name},
-        #{email},
-        #{password},
-        #{birth},
-        #{carrierCode},
-        #{phone},
-        #{point},
-        #{createdAt},
-        #{updatedAt},
-        #{cardNum},
-        #{gradeUpdatedAt}
-        )
+        (#{membershipId}, #{name}, #{email}, #{password}, #{birth}, #{carrierCode},
+        #{phone}, #{point}, #{createdAt}, #{updatedAt}, #{cardNum}, #{gradeUpdatedAt})
+    </insert>
+
+    <insert id="nonUserJoin"
+            parameterType="kr.co.negaboxdummy.user.model.NonUserJoinReq"
+            useGeneratedKeys="true"
+            keyProperty="nonUserId">
+
+        INSERT INTO non_user
+        (name, phone, birth, password, created_at, expire_at)
+        VALUES
+        (#{name}, #{phone}, #{birth}, #{password}, #{createdAt}, #{expireAt})
+    </insert>
+
+    <insert id="theaterFavorite">
+        INSERT IGNORE INTO theater_favorite
+        (user_id, theater_id, created_at)
+        VALUES
+        (#{userId}, #{theaterId}, #{createdAt})
+    </insert>
+
+    <insert id="movieFavorite">
+        INSERT IGNORE INTO movie_favorite
+        (user_id, movie_id, created_at)
+        VALUES
+        (#{userId}, #{movieId}, #{createdAt})
     </insert>
 </mapper>
