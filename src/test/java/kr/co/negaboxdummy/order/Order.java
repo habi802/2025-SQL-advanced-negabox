@@ -57,7 +57,7 @@ public class Order extends FakerConfig {
                 .quantity(quantity)
                 .unitPrice(unitPrice)
                 .price(totalPrice)
-                .status(faker.options().option(0, 1, 2))
+                .status(faker.options().option(0, 1))
                 .createdAt(orderDate)
                 .updatedAt(orderDate.plusMinutes(faker.number().numberBetween(0, 120)))
                 .build();
