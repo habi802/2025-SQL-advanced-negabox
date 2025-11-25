@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "kr.co.negaboxdummy.employee.EmployeeMapper">
+    <select id="findTheaterId">
+        SELECT theater_id
+        FROM theater
+    </select>
+
+    <insert id="save">
+        INSERT INTO employee
+        SET theater_id = #{theaterId},
+            admin_id = #{adminId},
+            name = #{name},
+            phone = #{phone},
+            type = #{type},
+            is_active = #{isActive}
+    </insert>
+</mapper>
