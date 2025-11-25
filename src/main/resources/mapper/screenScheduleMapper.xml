@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "kr.co.negaboxdummy.movie.ScreenScheduleMapper">
+    <select id="findInTheaterMovie">
+        SELECT s.screen_id, s.screen_type, tm.movie_id, m.running_time, tm.start_date, tm.end_date, e.employee_id
+        FROM theater_movie tm
+        JOIN screen s
+        ON s.theater_id = tm.theater_id
+        JOIN movie m
+        ON m.movie_id = tm.movie_id
+        JOIN employee e
+        ON e.theater_id = tm.theater_id
+        WHERE e.type = 1 AND e.is_active = 0
+        AND tm.start_date &gt;= '2025-11-01'
+        AND tm.start_date &lt;= '2025-11-30'
+        ORDER BY tm.start_date, s.screen_id
+    </select>
+
+    <insert id="save">
+        INSERT INTO screen_schedule
+        SET screen_id = #{screenId},
+            screen_type = #{screenType},
+            screen_time = #{screenTime},
+            movie_id = #{movieId},
+            employee_id = #{employeeId},
+            running_date = #{runningDate},
+            start_time = #{startTime},
+            end_time = #{endTime}
+    </insert>
+</mapper>
