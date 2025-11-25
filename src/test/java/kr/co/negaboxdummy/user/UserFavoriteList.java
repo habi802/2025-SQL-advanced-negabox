@@ -50,7 +50,7 @@ public class UserFavoriteList extends FakerConfig {
 
     private MovieFavorite makeMovieFavorite() {
 
-        int movieId = faker.random().nextInt(1, 117);
+        int movieId = faker.random().nextInt(1, 935);
         int userId = faker.random().nextInt(1, 163975);
         LocalDateTime createdAt = LocalDateTime.now()
                 .minusDays(faker.number().numberBetween(0, 365))
