@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.negaboxdummy.event.EventMapper">
+    <insert id="eventInsert"
+            parameterType="kr.co.negaboxdummy.event.model.EventInsertReq"
+            useGeneratedKeys="true"
+            keyProperty="partId">
+        INSERT IGNORE INTO event_part
+        (event_id, user_id, part_date, status, created_at, updated_at)
+        VALUES
+        (#{eventId}, #{userId}, #{partDate}, #{status}, #{createdAt}, #{updatedAt})
+    </insert>
+</mapper>
