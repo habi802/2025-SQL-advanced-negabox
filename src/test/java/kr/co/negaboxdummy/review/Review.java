@@ -115,15 +115,26 @@ public class Review extends FakerConfig {
 
     private ReviewInsertReq makeReview() {
         var row = jdbcTemplate.queryForMap(
-                "SELECT user_id, movie_id, schedule_id " +
-                        "FROM reservation " +
-                        "WHERE status = 'COMPLETED' " +
+                "SELECT r.user_id, ss.movie_id, r.schedule_id " +
+                        "FROM reservation r " +
+                        "JOIN screen_schedule ss ON r.schedule_id = ss.schedule_id " +
+                        "WHERE r.status = 'COMPLETED' " +
+                        "AND ss.movie_id IS NOT NULL " +
+                        "AND r.user_id IS NOT NULL " +
                         "ORDER BY RAND() LIMIT 1"
         );
 
-        Long userId = (Long) row.get("user_id");
-        Long movieId = (Long) row.get("movie_id");
-        Long scheduleId = (Long) row.get("schedule_id");
+        Object userObj = row.get("user_id");
+        Object movieObj = row.get("movie_id");
+        Object scheduleObj = row.get("schedule_id");
+
+        if (userObj == null || movieObj == null || scheduleObj == null) {
+            throw new IllegalStateException("NULL 값 발견: " + row);
+        }
+
+        Long userId = ((Number) row.get("user_id")).longValue();
+        Long movieId = ((Number) row.get("movie_id")).longValue();
+        Long scheduleId = ((Number) row.get("schedule_id")).longValue();
 
         int rating = faker.number().numberBetween(1, 11);
         String reviewText = generateKoreanReview();
