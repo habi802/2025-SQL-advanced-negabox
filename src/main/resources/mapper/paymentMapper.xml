@@ -33,5 +33,72 @@
         WHERE running_date BETWEEN #{start} AND #{end}
     </select>
 
+    <insert id="insertReservationSeat"
+            parameterType="kr.co.negaboxdummy.payment.model.ReservationSeatReq"
+            useGeneratedKeys="true"
+            keyProperty="reservationSeatId">
+        INSERT INTO reservation_seat
+        (schedule_id, seat_id, created_at)
+        VALUES
+        (#{scheduleId}, #{seatId}, #{createdAt})
+    </insert>
+
+    <insert id="insertReservationSeatList"
+            parameterType="kr.co.negaboxdummy.payment.model.ReservationSeatListReq">
+        INSERT INTO reservation_seat_list
+        (reservation_id, reservation_seat_id)
+        VALUES
+        (#{reservationId}, #{reservationSeatId})
+    </insert>
+
+    <!-- 기간 내 상영일정 + 상영관 -->
+    <select id="findSchedulesWithScreenByDateRange"
+            resultType="kr.co.negaboxdummy.payment.model.ScheduleInfo">
+        SELECT
+        ss.schedule_id AS scheduleId,
+        ss.screen_id   AS screenId
+        FROM screen_schedule ss
+        WHERE ss.running_date BETWEEN #{start} AND #{end}
+    </select>
+
+    <!-- 상영관별 좌석 목록
+         row_label, col_no 기준으로 정렬 -> 같은 행에서 연석 찾기 쉽게 -->
+    <select id="findSeatsByScreenId"
+            resultType="kr.co.negaboxdummy.payment.model.SeatInfo">
+        SELECT
+        s.seat_id   AS seatId,
+        s.screen_id AS screenId,
+        s.row_label AS rowLabel,
+        s.col_no    AS colNo
+        FROM seat s
+        WHERE s.screen_id = #{screenId}
+        AND s.is_delete = 0
+        ORDER BY
+        s.row_label,
+        s.col_no
+    </select>
+
+    <!-- 스케줄별 예매 + 인원수 (reservation_count의 count 합계) -->
+    <select id="findReservationsWithPersonCountBySchedule"
+            resultType="kr.co.negaboxdummy.payment.model.ReservationPerson">
+        SELECT
+        r.reservation_id      AS reservationId,
+        r.schedule_id         AS scheduleId,
+        SUM(rc.count)         AS personCount
+        FROM reservation r
+        JOIN reservation_count rc
+        ON rc.reservation_id = r.reservation_id
+        WHERE r.schedule_id = #{scheduleId}
+        AND r.status IN (0, 1)
+        GROUP BY
+        r.reservation_id,
+        r.schedule_id
+    </select>
+
+    <select id="findReservationCreatedAt" resultType="java.time.LocalDateTime">
+        SELECT created_at
+        FROM reservation
+        WHERE reservation_id = #{reservationId}
+    </select>
 
 </mapper>
