@@ -3,7 +3,7 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.negaboxdummy.payment.PaymentMapper">
 
-    <insert id="ReservationInsert"
+    <insert id="reservationInsert"
             parameterType="kr.co.negaboxdummy.payment.model.ReservationReq"
             useGeneratedKeys="true"
             keyProperty="reservationId">
@@ -12,4 +12,26 @@
         VALUES
         (#{scheduleId}, #{userId}, #{nonUserId}, #{price}, #{status}, #{createdAt}, #{updatedAt})
     </insert>
+
+    <insert id="reservationCountInsert">
+        INSERT INTO reservation_count
+        (reservation_id, age_type, count, price)
+        VALUES
+        (#{reservationId}, #{ageType}, #{count}, #{price})
+    </insert>
+
+    <select id="getScreenData">
+        SELECT screen_id, COUNT(*) AS count
+        FROM seat
+        WHERE screen_id = #{screenId}
+        GROUP BY screen_id;
+    </select>
+
+    <select id="findScheduleIdsByDateRange" resultType="long">
+        SELECT schedule_id
+        FROM screen_schedule
+        WHERE running_date BETWEEN #{start} AND #{end}
+    </select>
+
+
 </mapper>
