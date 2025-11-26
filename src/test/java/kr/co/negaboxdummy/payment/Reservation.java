@@ -39,7 +39,7 @@ public class Reservation extends FakerConfig {
                 paymentMapper.findScheduleIdsByDateRange(start, end);
 
         // 넣고 싶은 총 예매 개수 (너가 원하는 숫자로 조절)
-        int TOTAL_RESERVATION = 50_000;
+        int TOTAL_RESERVATION = 1_500_000;
 
         for (int i = 0; i < TOTAL_RESERVATION; i++) {
 
@@ -48,7 +48,7 @@ public class Reservation extends FakerConfig {
                     faker.random().nextInt(0, scheduleIdList.size() - 1)
             );
 
-            int personCnt = faker.number().numberBetween(1, 3);
+            int personCnt = faker.number().numberBetween(1, 4);
 
             // 가격(단가)별 인원 수를 합치기 위한 map
             // value: 해당 가격의 인원 수
@@ -102,7 +102,7 @@ public class Reservation extends FakerConfig {
                     .scheduleId(scheduleId)
                     .userId(userId)
                     .nonUserId(nonUserId)
-                    .price(totalPrice)   // ★ 여기!
+                    .price(totalPrice)
                     .status(status)
                     .createdAt(date)
                     .updatedAt(date)
