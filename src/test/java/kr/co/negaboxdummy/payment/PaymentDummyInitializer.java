@@ -85,11 +85,91 @@ public class PaymentDummyInitializer extends FakerConfig {
                     }
                 }
 
-                // 결제 단위 할인 등록
-
-
                 // 결제 수단(카드 결제, 계좌 이체, 휴대폰 결제) 내역 등록
+                // 카드 결제인 경우 맞는 카드사일 경우 결제 단위 할인 내역 등록
+                if (paymentMethod == 0) {
+                    // 카드 결제
+                    String[] cardCompanyCode = {"00501", "00502", "00503", "00504", "00505", "00506", "00507", "00508", "00509", "00510", "00511", "00512"};
+                    int getCardCompanyCodeIndex = (int)(Math.random() * cardCompanyCode.length);
 
+                    int installmentMonths;
+                    if (true) {
+                        installmentMonths = 3;
+                    } else {
+                        installmentMonths = 0;
+                    }
+
+                    String cardNumber = faker.number().digits(4) + "-" + faker.number().digits(4) + "-" + faker.number().digits(4) + "-" + faker.number().digits(4);
+                    String cardApprovalNumber = faker.number().digits(6);
+
+                    PaymentCardPostReq cardReq = PaymentCardPostReq.builder()
+                                                                   .paymentId(paymentId)
+                                                                   .cardCompanyCode(cardCompanyCode[getCardCompanyCodeIndex])
+                                                                   .cardNumber(cardNumber)
+                                                                   .installmentMonths(installmentMonths)
+                                                                   .cardApprovalNumber(cardApprovalNumber)
+                                                                   .build();
+
+                    paymentMapper.savePaymentCard(cardReq);
+                } else if (paymentMethod == 1) {
+                    // 계좌 이체
+                    String[] bankCode = {"01201", "01202", "01203", "01204", "01205", "01206", "01207", "01208", "01209", "01210", "01211", "01212", "01213", "01214", "01215"};
+                    int getBankCodeIndex = (int)(Math.random() * bankCode.length);
+                    String[] lastName = {"김", "이", "박", "최", "정", "강", "조", "윤", "장", "임", "오", "한"};
+                    int getLastNameIndex = (int)(Math.random() * lastName.length);
+                    String[] firstName = {"지훈", "서연", "민재", "수현", "예진", "도윤", "채원", "하늘", "지우", "민서", "유진", "현우", "지민", "예린", "태윤", "세아", "시현", "준호", "아린", "시우", "소윤", "가온", "유나", "연우", "서준", "나예", "민혁", "하린", "시온", "은채"};
+                    int getFirstNameIndex = (int)(Math.random() * firstName.length);
+
+                    String accountNumber;
+                    if (getBankCodeIndex == 0) {
+                        accountNumber = "110-" + faker.number().digits(3) + "-" + faker.number().digits(6);
+                    } else if (getBankCodeIndex == 1) {
+                        accountNumber = faker.number().digits(3) + "-" + faker.number().digits(3) + "-" + faker.number().digits(4);
+                    } else if (getBankCodeIndex == 2) {
+                        accountNumber = "1002-" + faker.number().digits(3) + "-" + faker.number().digits(6);
+                    } else if (getBankCodeIndex == 3) {
+                        accountNumber = faker.number().digits(3) + "-" + faker.number().digits(6) + "-" + faker.number().digits(5);
+                    } else if (getBankCodeIndex == 4) {
+                        accountNumber = faker.number().digits(3) + "-" + faker.number().digits(4) + "-" + faker.number().digits(4) + "-" + faker.number().digits(2);
+                    } else if (getBankCodeIndex == 5) {
+                        accountNumber = faker.number().digits(3) + "-" + faker.number().digits(6) + "-" + faker.number().digits(2) + "-" + faker.number().digits(3);
+                    } else if (getBankCodeIndex == 6) {
+                        accountNumber = faker.number().digits(3) + "-" + faker.number().digits(2) + "-" + faker.number().digits(6);
+                    } else if (getBankCodeIndex == 7) {
+                        accountNumber = faker.number().digits(3) + "-" + faker.number().digits(4) + "-" + faker.number().digits(4) + "-" + faker.number().digits(3);
+                    } else if (getBankCodeIndex == 8) {
+                        accountNumber = "3333-" + faker.number().digits(2) + "-" + faker.number().digits(7);
+                    } else {
+                        accountNumber = faker.number().digits(3) + "-" + faker.number().digits(4) + "-" + faker.number().digits(6);
+                    }
+
+                    String accountHolderName = lastName[getLastNameIndex] + firstName[getFirstNameIndex];
+
+                    PaymentBankTransferPostReq bankTransferReq = PaymentBankTransferPostReq.builder()
+                                                                                           .paymentId(paymentId)
+                                                                                           .bankCode(bankCode[getBankCodeIndex])
+                                                                                           .accountNumber(accountNumber)
+                                                                                           .accountHolderName(accountHolderName)
+                                                                                           .build();
+
+                    paymentMapper.savePaymentBankTransfer(bankTransferReq);
+                } else if (paymentMethod == 2) {
+                    // 휴대폰 결제
+                    String[] carrierCode = {"00901", "00902", "00903"};
+                    int getCarrierCodeIndex = (int)(Math.random() * carrierCode.length);
+
+                    String phone = "010-" + faker.number().digits(4) + "-" + faker.number().digits(4);
+                    String approvalCode = faker.number().digits(10);
+
+                    PaymentMobilePostReq mobileReq = PaymentMobilePostReq.builder()
+                            .paymentId(paymentId)
+                            .carrierCode(carrierCode[getCarrierCodeIndex])
+                            .phone(phone)
+                            .approvalCode(approvalCode)
+                            .build();
+
+                    paymentMapper.savePaymentMobile(mobileReq);
+                }
 
                 sqlSession.flushStatements();
             }

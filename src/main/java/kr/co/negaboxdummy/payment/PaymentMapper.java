@@ -43,4 +43,7 @@ public interface PaymentMapper {
     int savePointLog(PointLogPostReq req);
     int updateUserCoupon(UserCouponUpdateReq req);
     int updateUserVoucher(UserVoucherUpdateReq req);
+    int savePaymentCard(PaymentCardPostReq req);
+    int savePaymentBankTransfer(PaymentBankTransferPostReq req);
+    int savePaymentMobile(PaymentMobilePostReq req);
 }
