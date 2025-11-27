@@ -34,4 +34,6 @@ public interface PaymentMapper {
 
     LocalDateTime findReservationCreatedAt(@Param("reservationId") Long reservationId);
 
+    List<ReservationGetRes> findInReservation();
+    List<OrderGetRes> findInOrder();
 }

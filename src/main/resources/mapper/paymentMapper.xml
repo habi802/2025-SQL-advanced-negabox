@@ -101,4 +101,17 @@
         WHERE reservation_id = #{reservationId}
     </select>
 
+    <!-- 예매 데이터 조회 -->
+    <select id="findInReservation">
+        SELECT reservation_id, user_id, non_user_id, price, updated_at
+        FROM reservation
+        WHERE status = 1
+    </select>
+
+    <!-- 주문 내역 데이터 조회 -->
+    <select id="findInOrder">
+        SELECT order_id, price, created_at
+        FROM order
+        WHERE status = 0
+    </select>
 </mapper>
