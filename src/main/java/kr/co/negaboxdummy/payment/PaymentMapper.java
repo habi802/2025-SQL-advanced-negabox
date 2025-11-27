@@ -36,4 +36,5 @@ public interface PaymentMapper {
 
     List<ReservationGetRes> findInReservation();
     List<OrderGetRes> findInOrder();
+    int save(PaymentPostReq req);
 }

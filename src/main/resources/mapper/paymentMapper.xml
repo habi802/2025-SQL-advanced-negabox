@@ -105,13 +105,29 @@
     <select id="findInReservation">
         SELECT reservation_id, user_id, non_user_id, price, updated_at
         FROM reservation
-        WHERE status = 1
+        WHERE r.status != 0
     </select>
 
     <!-- 주문 내역 데이터 조회 -->
     <select id="findInOrder">
-        SELECT order_id, price, created_at
-        FROM order
-        WHERE status = 0
+        SELECT o.order_id, o.price, o.status, o.created_at, o.updated_at
+        FROM order o
+        JOIN store_item s
+          ON s.store_item_id = o.store_item_id
+        WHERE s.payment_type = 0
     </select>
+
+    <!-- 결제 데이터 등록 -->
+    <insert id="save">
+        INSERT INTO payment
+        SET payment_type = #{paymentType},
+            type_id = #{typeId},
+            payment_method = #{paymentMethod},
+            origin_amount = #{originAmount},
+            discount_total = #{discountTotal},
+            amount = #{amount},
+            status = #{status},
+            completed_at = #{completedAt},
+            cancelled_at = #{cancelledAt}
+    </insert>
 </mapper>

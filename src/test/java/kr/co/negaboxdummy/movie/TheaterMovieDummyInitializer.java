@@ -59,5 +59,7 @@ public class TheaterMovieDummyInitializer extends FakerConfig {
 
             sqlSession.flushStatements();
         }
+
+        sqlSession.close();
     }
 }

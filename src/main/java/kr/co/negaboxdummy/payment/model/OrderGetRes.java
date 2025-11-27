@@ -8,5 +8,7 @@ import java.math.BigDecimal;
 public class OrderGetRes {
     private long orderId;
     private BigDecimal price;
+    private int status;
     private String createdAt;
+    private String updatedAt;
 }

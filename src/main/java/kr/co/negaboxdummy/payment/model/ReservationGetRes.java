@@ -8,5 +8,6 @@ public class ReservationGetRes {
     private Long userId;
     private Long nonUserId;
     private int price;
+    private int status;
     private String updatedAt;
 }
