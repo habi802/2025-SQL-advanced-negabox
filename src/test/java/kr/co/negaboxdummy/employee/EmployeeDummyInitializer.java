@@ -92,5 +92,7 @@ public class EmployeeDummyInitializer extends FakerConfig {
 
             sqlSession.flushStatements();
         }
+
+        sqlSession.close();
     }
 }

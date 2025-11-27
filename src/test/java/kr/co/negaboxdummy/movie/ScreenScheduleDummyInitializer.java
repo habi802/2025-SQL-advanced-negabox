@@ -139,5 +139,7 @@ public class ScreenScheduleDummyInitializer extends FakerConfig {
 
             sqlSession.flushStatements();
         }
+
+        sqlSession.close();
     }
 }
