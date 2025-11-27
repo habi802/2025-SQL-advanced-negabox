@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.negaboxdummy.review.ReviewMapper">
+
+    <!-- 배치라서 parameterType 절대 쓰면 안 됨 -->
+    <insert id="reviewInsertBatch">
+        INSERT IGNORE INTO review
+        (movie_id, schedule_id, user_id, review_rating, review_text, is_delete, created_at, updated_at)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.movieId},
+            #{item.scheduleId},
+            #{item.userId},
+            #{item.reviewRating},
+            #{item.reviewText},
+            #{item.isDelete},
+            #{item.createdAt},
+            #{item.updatedAt}
+            )
+        </foreach>
+    </insert>
+
+</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.negaboxdummy.order.OrderMapper">
+
+    <insert id="orderInsert" parameterType="kr.co.negaboxdummy.order.model.OrderInsertReq">
+        INSERT IGNORE INTO `order`
+        (user_id, store_item_id, quantity, unit_price, price, status, created_at, updated_at)
+        VALUES
+        (#{userId}, #{storeItemId}, #{quantity}, #{unitPrice}, #{price}, #{status}, #{createdAt}, #{updatedAt})
+    </insert>
+
+    <insert id="orderInsertBatch">
+        INSERT IGNORE INTO `order`
+        (user_id, store_item_id, quantity, unit_price, price, status, created_at, updated_at)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.userId}, #{item.storeItemId}, #{item.quantity},
+            #{item.unitPrice}, #{item.price}, #{item.status},
+            #{item.createdAt}, #{item.updatedAt})
+        </foreach>
+    </insert>
+
+</mapper>
