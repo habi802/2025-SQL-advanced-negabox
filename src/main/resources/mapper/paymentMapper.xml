@@ -103,18 +103,22 @@
 
     <!-- 예매 조회 -->
     <select id="findInReservation">
-        SELECT reservation_id, user_id, non_user_id, price, updated_at
+        SELECT reservation_id, user_id, non_user_id, price, created_at, updated_at
         FROM reservation
-        WHERE r.status != 0
+        WHERE status != 0
+        ORDER BY reservation_id
+        LIMIT #{limit} OFFSET #{offset}
     </select>
 
     <!-- 주문 내역 조회 -->
     <select id="findInOrder">
         SELECT o.order_id, o.price, o.status, o.created_at, o.updated_at
-        FROM order o
+        FROM `order` o
         JOIN store_item s
           ON s.store_item_id = o.store_item_id
         WHERE s.payment_type = 0
+        ORDER BY o.order_id
+        LIMIT #{limit} OFFSET #{offset}
     </select>
 
     <!-- 좌석 단위 할인의 할인 수단 분류 코드 조회 -->
@@ -126,8 +130,16 @@
         WHERE rsl.reservation_id = #{reservationId}
     </select>
 
+    <!-- 할인 정책 조회 -->
+    <select id="findInDiscountPolicy">
+        SELECT policy_id, discount_amount, discount_percent, min_price, max_benefit_amount
+        FROM discount_policy
+        WHERE partner_id = #{partnerId}
+        LIMIT 1
+    </select>
+
     <!-- 결제 등록 -->
-    <insert id="savePayment" useGeneratedKeys="true" keyProperty="paymentId">
+        <insert id="savePayment" useGeneratedKeys="true" keyProperty="paymentId">
         INSERT INTO payment
         SET payment_type = #{paymentType},
             type_id = #{typeId},
@@ -151,7 +163,6 @@
     <insert id="savePointLog">
         INSERT INTO point_log
         SET user_id = #{userId},
-        payment_id = #{paymentId},
         change_amount = #{changeAmount},
         balance_after = #{balanceAfter},
         status = #{status}
@@ -160,7 +171,7 @@
     <!-- 쿠폰 상태 변경 -->
     <update id="updateUserCoupon">
         UPDATE coupon_detail
-        SET status = 1
+        SET status = #{status},
             use_at = #{useAt}
         WHERE user_coupon_id = #{userCouponId}
     </update>
@@ -168,7 +179,7 @@
     <!-- 교환권 상태 변경 -->
     <update id="updateUserVoucher">
         UPDATE user_voucher
-        SET status = 1
+        SET status = #{status},
             use_at = #{useAt}
         WHERE user_voucher_id = #{userVoucherId}
     </update>
@@ -181,6 +192,14 @@
             card_number = #{cardNumber},
             installment_months = #{installmentMonths},
             card_approval_number = #{cardApprovalNumber}
+    </insert>
+
+    <!-- 결제 단위 할인 내역 등록 -->
+    <insert id="savePaymentDiscount">
+        INSERT INTO payment_discount
+        SET payment_id = #{paymentId},
+            policy_id = #{policyId},
+            applied_amount = #{appliedAmount}
     </insert>
 
     <!-- 결제 수단 계좌 이체 등록 -->
@@ -197,7 +216,7 @@
         INSERT INTO payment_mobile
         SET payment_id = #{paymentId},
             carrier_code = #{carrierCode},
-            phone_number = #{phone}
+            phone_number = #{phone},
             approval_code = #{approvalCode}
     </insert>
 </mapper>
