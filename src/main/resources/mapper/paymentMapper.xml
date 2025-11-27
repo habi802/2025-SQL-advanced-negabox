@@ -101,14 +101,14 @@
         WHERE reservation_id = #{reservationId}
     </select>
 
-    <!-- 예매 데이터 조회 -->
+    <!-- 예매 조회 -->
     <select id="findInReservation">
         SELECT reservation_id, user_id, non_user_id, price, updated_at
         FROM reservation
         WHERE r.status != 0
     </select>
 
-    <!-- 주문 내역 데이터 조회 -->
+    <!-- 주문 내역 조회 -->
     <select id="findInOrder">
         SELECT o.order_id, o.price, o.status, o.created_at, o.updated_at
         FROM order o
@@ -117,8 +117,24 @@
         WHERE s.payment_type = 0
     </select>
 
-    <!-- 결제 데이터 등록 -->
-    <insert id="save">
+    <!-- 좌석 단위 할인의 할인 수단 분류 코드 조회 -->
+    <select id="findInTicketDiscount">
+        SELECT td.benefit_code, td.benefit_id, td.applied_amount
+        FROM reservation_seat_list rsl
+        JOIN ticket_discount td
+          ON td.reservation_seat_id = rsl.reservation_seat_id
+        WHERE rsl.reservation_id = #{reservationId}
+    </select>
+
+    <!-- 회원 포인트 조회 -->
+    <select id="findPoint">
+        SELECT point
+        FROM user
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- 결제 등록 -->
+    <insert id="savePayment" useGeneratedKeys="true" keyProperty="paymentId">
         INSERT INTO payment
         SET payment_type = #{paymentType},
             type_id = #{typeId},
@@ -129,5 +145,50 @@
             status = #{status},
             completed_at = #{completedAt},
             cancelled_at = #{cancelledAt}
+    </insert>
+
+    <!-- 포인트 사용 내역 등록 -->
+    <insert id="savePointLog">
+        INSERT INTO point_log
+        SET user_id = #{userId},
+        payment_id = #{paymentId},
+        change_amount = #{changeAmount},
+        balance_after = #{balanceAfter},
+        status = #{status}
+    </insert>
+
+    <!-- 회원 포인트 수정 -->
+    <update id="updatePointInUser">
+        UPDATE user
+        SET point = #{point}
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 결제 수단 카드 결제 등록 -->
+    <insert id="savePaymentCard">
+        INSERT INTO payment_card
+        SET payment_id = #{paymentId},
+            card_company_code = #{cardCompanyCode},
+            card_number = #{cardNumber},
+            installment_months = #{installmentMonths},
+            card_approval_number = #{cardApprovalNumber}
+    </insert>
+
+    <!-- 결제 수단 계좌 이체 등록 -->
+    <insert id="savePaymentBankTransfer">
+        INSERT INTO payment_bank_transfer
+        SET payment_id = #{paymentId},
+            bank_code = #{bankCode},
+            account_number = #{accountNumber},
+            account_holder_name = #{accountHolderName}
+    </insert>
+
+    <!-- 결제 수단 휴대폰 결제 등록 -->
+    <insert id="savePaymentMobile">
+        INSERT INTO payment_mobile
+        SET payment_id = #{paymentId},
+            carrier_code = #{carrierCode},
+            phone_number = #{phone}
+            approval_code = #{approvalCode}
     </insert>
 </mapper>
