@@ -126,13 +126,6 @@
         WHERE rsl.reservation_id = #{reservationId}
     </select>
 
-    <!-- 회원 포인트 조회 -->
-    <select id="findPoint">
-        SELECT point
-        FROM user
-        WHERE user_id = #{userId}
-    </select>
-
     <!-- 결제 등록 -->
     <insert id="savePayment" useGeneratedKeys="true" keyProperty="paymentId">
         INSERT INTO payment
@@ -147,6 +140,13 @@
             cancelled_at = #{cancelledAt}
     </insert>
 
+    <!-- 회원 포인트 조회 -->
+    <select id="findPoint">
+        SELECT point
+        FROM user
+        WHERE user_id = #{userId}
+    </select>
+
     <!-- 포인트 사용 내역 등록 -->
     <insert id="savePointLog">
         INSERT INTO point_log
@@ -157,11 +157,20 @@
         status = #{status}
     </insert>
 
-    <!-- 회원 포인트 수정 -->
-    <update id="updatePointInUser">
-        UPDATE user
-        SET point = #{point}
-        WHERE user_id = #{userId}
+    <!-- 쿠폰 상태 변경 -->
+    <update id="updateUserCoupon">
+        UPDATE coupon_detail
+        SET status = 1
+            use_at = #{useAt}
+        WHERE user_coupon_id = #{userCouponId}
+    </update>
+
+    <!-- 교환권 상태 변경 -->
+    <update id="updateUserVoucher">
+        UPDATE user_voucher
+        SET status = 1
+            use_at = #{useAt}
+        WHERE user_voucher_id = #{userVoucherId}
     </update>
 
     <!-- 결제 수단 카드 결제 등록 -->

@@ -38,8 +38,9 @@ public interface PaymentMapper {
     List<ReservationGetRes> findInReservation();
     List<OrderGetRes> findInOrder();
     List<TicketDiscountGetRes> findInTicketDiscount(long reservationId);
-    BigDecimal findPoint(long userId);
     int savePayment(PaymentPostReq req);
+    BigDecimal findPoint(long userId);
     int savePointLog(PointLogPostReq req);
-    int updatePointInUser(UserPointUpdateReq req);
+    int updateUserCoupon(UserCouponUpdateReq req);
+    int updateUserVoucher(UserVoucherUpdateReq req);
 }

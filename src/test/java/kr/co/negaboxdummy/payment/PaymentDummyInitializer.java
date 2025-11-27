@@ -43,13 +43,13 @@ public class PaymentDummyInitializer extends FakerConfig {
 
                 Long paymentId = paymentReq.getPaymentId();
 
-                // (회원만)결제 등록 후 좌석 단위 할인에 대하여 포인트, 쿠폰, 교환권 상태 변경 및 사용 내역 등록
+                // (회원만)결제 등록 후 좌석 단위 할인에 대한 등록 또는 수정
                 if (reservation.getUserId() != null) {
                     List<TicketDiscountGetRes> TicketDiscountList = paymentMapper.findInTicketDiscount(reservation.getReservationId());
                     for (TicketDiscountGetRes ticketDiscount : TicketDiscountList) {
                         String benefitCode = ticketDiscount.getBenefitCode();
                         if ("01101".equals(benefitCode)) {
-                            // 포인트 사용 내역 등록, 회원 포인트 변경
+                            // 포인트 사용 내역 등록
                             long userId = ticketDiscount.getBenefitId();
                             BigDecimal point = paymentMapper.findPoint(userId);
                             BigDecimal appliedAmount = ticketDiscount.getAppliedAmount();
@@ -65,24 +65,31 @@ public class PaymentDummyInitializer extends FakerConfig {
                                                                          .build();
 
                             paymentMapper.savePointLog(pointLogReq);
-
-                            UserPointUpdateReq userPointReq = UserPointUpdateReq.builder()
-                                                                                .point(point)
-                                                                                .userId(userId)
-                                                                                .build();
-
-                            paymentMapper.updatePointInUser(userPointReq);
                         } else if ("01102".equals(benefitCode)) {
-                            // 쿠폰
+                            // 쿠폰 상태 변경
+                            UserCouponUpdateReq couponReq = UserCouponUpdateReq.builder()
+                                                                               .useAt("")
+                                                                               .userCouponId(ticketDiscount.getBenefitId())
+                                                                               .build();
+
+                            paymentMapper.updateUserCoupon(couponReq);
                         } else if ("01103".equals(benefitCode)) {
-                            // 교환권
+                            // 교환권 상태 변경
+                            UserVoucherUpdateReq voucherReq = UserVoucherUpdateReq.builder()
+                                                                                  .useAt("")
+                                                                                  .userVoucherId(ticketDiscount.getBenefitId())
+                                                                                  .build();
+
+                            paymentMapper.updateUserVoucher(voucherReq);
                         }
                     }
                 }
 
                 // 결제 단위 할인 등록
 
+
                 // 결제 수단(카드 결제, 계좌 이체, 휴대폰 결제) 내역 등록
+
 
                 sqlSession.flushStatements();
             }
@@ -111,9 +118,8 @@ public class PaymentDummyInitializer extends FakerConfig {
 
             paymentMapper.savePayment(req);
 
-            // 결제 등록 후 결제 방식이 현금일 경우 결제 수단(카드 결제) 내역 등록
+            // 결제 등록 후 결제 수단(카드 결제) 내역 등록
 
-            // 결제 방식이 포인트일 경우 포인트 상태 변경 및 사용 내역 등록
 
             sqlSession.flushStatements();
         }
