@@ -75,5 +75,7 @@ public class SeatDummyInitializer extends FakerConfig {
                 sqlSession.flushStatements();
             }
         }
+
+        sqlSession.close();
     }
 }

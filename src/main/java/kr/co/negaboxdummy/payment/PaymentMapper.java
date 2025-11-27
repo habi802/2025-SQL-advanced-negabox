@@ -4,6 +4,7 @@ import feign.Param;
 import kr.co.negaboxdummy.payment.model.*;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,4 +35,17 @@ public interface PaymentMapper {
 
     LocalDateTime findReservationCreatedAt(@Param("reservationId") Long reservationId);
 
+    List<ReservationGetRes> findInReservation(@Param int limit, @Param int offset);
+    List<OrderGetRes> findInOrder(@Param int limit, @Param int offset);
+    List<TicketDiscountGetRes> findInTicketDiscount(long reservationId);
+    DiscountPolicyGetRes findInDiscountPolicy(String partnerId);
+    int savePayment(PaymentPostReq req);
+    BigDecimal findPoint(long userId);
+    int savePointLog(PointLogPostReq req);
+    int updateUserCoupon(UserCouponUpdateReq req);
+    int updateUserVoucher(UserVoucherUpdateReq req);
+    int savePaymentCard(PaymentCardPostReq req);
+    int savePaymentDiscount(PaymentDiscountPostReq req);
+    int savePaymentBankTransfer(PaymentBankTransferPostReq req);
+    int savePaymentMobile(PaymentMobilePostReq req);
 }

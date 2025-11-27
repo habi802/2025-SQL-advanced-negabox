@@ -139,5 +139,7 @@ public class MovieDummyInitializer extends FakerConfig {
 
             curPage++;
         }
+
+        sqlSession.close();
     }
 }
