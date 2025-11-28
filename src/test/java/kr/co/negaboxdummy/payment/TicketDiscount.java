@@ -9,6 +9,6 @@ public class TicketDiscount extends FakerConfig {
     @Test
     @Transactional
     void insertTicketDiscount() {
-        
+
     }
 }
